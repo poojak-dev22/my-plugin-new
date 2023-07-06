@@ -34,6 +34,7 @@ return createTemplateAction({
       },
     },
     handler: async (ctx) => {
+      console.log("**************",ctx);
       const { owner, repo } = ctx.input;
       console.log("inside custom actions", owner, repo)
       try {

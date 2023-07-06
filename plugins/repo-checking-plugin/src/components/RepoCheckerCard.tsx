@@ -12,7 +12,7 @@ export const RepoCheckerCard = ({ accessToken }: RepoCheckerCardProps) => {
   const [result, setResult] = useState<boolean | null>(null);
   
   const handleCheck = async () => {
-    const checker = new RepoChecker("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");
+    const checker = new RepoChecker(accessToken);
     const exists = await checker.checkRepository(owner, repo);
     setResult(exists);
   };
