@@ -5,10 +5,16 @@ const octokit = new Octokit();
 
 // Check if a repository exists
 const checkRepositoryExists = async (owner: any, repo: any) => {
-    console.log("**********************repo",repo, owner)
-    const res = await octokit.repos.get({ owner, repo });
-    console.log("**********************go",res)
-    return true;
+    // console.log("**********************repo",repo, owner)
+    // const res = await octokit.repos.get({ owner, repo });
+    // console.log("**********************go",res)
+    // return true;
+    try {
+      await octokit.repos.get({ owner, repo });
+      return true;
+    } catch (error) {
+      return false;
+    }
 };
 
 // Create custom actions
@@ -31,7 +37,7 @@ return createTemplateAction({
         },
       },
     },
-    handler: async (ctx) => {
+    handler: async (ctx:any) => {
       console.log("**************",ctx);
       let { owner, repo } = ctx.input;
       console.log("inside custom actions", owner, repo)
@@ -44,11 +50,11 @@ return createTemplateAction({
       console.log("splitRepoUrl",owner, repo)
         if(await checkRepositoryExists(owner, repo)){
           console.log("========>>")
-          ctx.output('exists', false);
+          ctx.output('exists', true);
         }
         else{
           console.log("========**")
-          ctx.output('exists', true);
+          ctx.output('exists', false);
         }
     },
   });
