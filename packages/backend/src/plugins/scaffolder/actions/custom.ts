@@ -5,12 +5,10 @@ const octokit = new Octokit();
 
 // Check if a repository exists
 const checkRepositoryExists = async (owner: any, repo: any) => {
-  try {
-    await octokit.repos.get({ owner, repo });
-    console.log(`Repository ${owner}/${repo} exists.`);
-  } catch (error) {
-    console.error(`Repository ${owner}/${repo} does not exist.`, error);
-  }
+    console.log("**********************repo",repo, owner)
+    const res = await octokit.repos.get({ owner, repo });
+    console.log("**********************go",res)
+    return true;
 };
 
 // Create custom actions
@@ -35,15 +33,23 @@ return createTemplateAction({
     },
     handler: async (ctx) => {
       console.log("**************",ctx);
-      const { owner, repo } = ctx.input;
+      let { owner, repo } = ctx.input;
       console.log("inside custom actions", owner, repo)
-      try {
-        await checkRepositoryExists(owner, repo);
-  
-        ctx.output('exists', true);
-      } catch (error) {
-        ctx.output('exists', false);
-      }
+      const splitRepoUrl = repo?.split("?");
+      const splitRepoUrlValues = splitRepoUrl[1].split("&");
+      const ownerValue = splitRepoUrlValues[0].split("=");
+      owner = ownerValue[1];
+      const repoValue = splitRepoUrlValues[1].split("=");
+      repo = repoValue[1];
+      console.log("splitRepoUrl",owner, repo)
+        if(await checkRepositoryExists(owner, repo)){
+          console.log("========>>")
+          ctx.output('exists', false);
+        }
+        else{
+          console.log("========**")
+          ctx.output('exists', true);
+        }
     },
   });
 }

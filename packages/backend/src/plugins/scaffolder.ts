@@ -20,9 +20,9 @@ export default async function createPlugin(
     config: env.config,
     reader: env.reader,
   });
-
+   
   const actions = [...builtInActions, checkRepositoryExistsAction()];
-
+  console.log("actions array", actions)
 
   return await createRouter({
     actions,
